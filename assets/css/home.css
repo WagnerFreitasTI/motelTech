@@ -1,0 +1,85 @@
+
+
+/* Estilos para dispositivos móveis */
+@media only screen and (max-width: 599px) {
+	.homearticles{
+		height:10%!important;
+	}
+	.inerhome{
+		height: 60px!important;
+	}
+	.majorhome{
+		margin-top:-20%!important;
+	}
+    .botoeshome{
+		font-size:10px!important;;
+	}
+	.textbemvindo{
+		font-size:8px!important;
+	}
+	.container {
+		display: flex;
+		width: 100%!important;
+		margin-top:-10%!important;
+	
+	}
+	
+	.content {
+		flex: 1;
+		padding: 20px;
+		text-align: center;
+	}
+	
+	.text-above-button {
+		margin-bottom: 10px;
+	}
+	
+	.content ul.actions {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+	}
+	
+	.content ul.actions li {
+		display: flex;
+	}
+	
+	.content ul.actions li a {
+		margin: 0 auto;
+	}
+  }
+  
+  /* Estilos para tablets */
+@media only screen and (min-width: 600px) {
+	.container {
+		display: flex;
+	}
+	
+	.content {
+		flex: 1;
+		padding: 20px;
+		text-align: center;
+	}
+	
+	.text-above-button {
+		margin-bottom: 10px;
+	}
+	
+	.content ul.actions {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+	}
+	
+	.content ul.actions li {
+		display: flex;
+	}
+	
+	.content ul.actions li a {
+		margin: 0 auto;
+	}
+}
+
+
