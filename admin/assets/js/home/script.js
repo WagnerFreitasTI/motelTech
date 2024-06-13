@@ -1,54 +1,37 @@
+//Essa estrutura assegura que as suítes sejam carregadas e atualizadas dinamicamente, com tratamento adequado para erros e feedback ao usuário.
 
-//RENDERIZA SUITES
 $(document).ready(function () {
-
-
-
-
     $.ajax({
         url: '../../src/suite/index',
         method: 'GET',
-        dataType: 'html',
-        data: 'op=todas_suites'
-    })
-
-        .done(function (data) {
-       
-      
+        dataType: 'json',
+        data: { op: 'todas_suites' },
+        success: function (response) {
             try {
-                var obj_json = JSON.parse(data);
-                if (obj_json['mensagem'] === "sucesso" && (obj_json['suites'].length > 0)) {
-                $('#suites').html("");
-
-                for (var i = 0; i < obj_json['suites'].length; i++) {
-                  
-                 var html = get_html_suite(obj_json['suites'][i]);
-                  $('#suites').prepend(html);
-                }
-
-                setInterval(atualiza_suites, 3000);
-
+                if (response.mensagem === "sucesso" && response.suites.length > 0) {
+                    $('#suites').empty();
+                    response.suites.forEach(function (suite) {
+                        var html = get_html_suite(suite);
+                        $('#suites').prepend(html);
+                    });
+                    setInterval(atualiza_suites, 3000);
                 } else {
-                    console.log("nao existe")
+                    console.log("Não existem suites disponíveis");
                 }
-
-            } catch (e) {
+            } catch (error) {
                 mensagem_danger("Houve um erro ao recuperar as máquinas");
-                console.log(e)
-
+                console.error(error);
             }
-
-        }).fail(function (data) {
-           mensagem_danger("Houve um erro inesperado");
-        });
-
-  
-
+        },
+        error: function () {
+            mensagem_danger("Houve um erro inesperado");
+        }
+    });
 });
+
 
 //ATUALIZA SUITES
 function atualiza_suites() {
-
     $.ajax({
         url: '../../src/suite/index',
         method: 'GET',
@@ -58,12 +41,10 @@ function atualiza_suites() {
 
         .done(function (data) {
             console.log(data)
-       
-            
             try {
                 var obj_json = JSON.parse(data);
                 if (obj_json['mensagem'] === "sucesso" && (obj_json['suites'].length > 0)) {
-                 
+
                     for (var i = 0; i < obj_json['suites'].length; i++) {
                         //STATUS SUITE
                         set_html_suite(obj_json['suites'][i]);
@@ -357,22 +338,24 @@ function get_html_suite(obj_json) {
 //RECEBE HTML DA SUITE
 function set_html_suite(obj_json) {
 
-    var classe_nova ="dark"
-      //STATUS  
 
-      if(suite_online( obj_json['visto'])){
-      
+
+    var classe_nova = "dark"
+    //STATUS  
+
+    if (suite_online(obj_json['visto'])) {
+
         var classe_nova = get_background_suite(obj_json['status_suite']);
-        var index = "#msg_erro_suite_"+obj_json['id'];
+        var index = "#msg_erro_suite_" + obj_json['id'];
         $(index).html("&nbsp;");
-      }else{
-        var index = "#msg_erro_suite_"+obj_json['id'];
-        $(index).text("Sem conexão...");
-       
-      }
-    
-     document.getElementById('bg_' + obj_json['id']).className = 'card bg-'+classe_nova+' text-white';
-    
+    } else {
+        var index = "#msg_erro_suite_" + obj_json['id'];
+        $(index).text("Sem Conexão...");
+
+    }
+
+    document.getElementById('bg_' + obj_json['id']).className = 'card bg-' + classe_nova + ' text-white';
+
 }
 
 //ATUALIZA STATUS
@@ -382,57 +365,57 @@ function atualiza_status_suite(id, ipv4, status) {
         title: 'Alterar?',
         text: "Deseja realmente alterar o status da suíte?",
         icon: 'error',
-    
+
         showClass: {
             popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
+        },
+        hideClass: {
             popup: 'animate__animated animate__fadeOutUp'
-          },
+        },
         showCancelButton: true,
         confirmButtonColor: '#9700bd',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sim, quero alterar!',
         cancelButtonText: 'Cancelar',
-      }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: '../../src/suite/index',
                 method: 'POST',
                 dataType: 'html',
-                data: 'op=set_status&status_suite='+status+'&ipv4='+ipv4+'&id_suite='+id
+                data: 'op=set_status&status_suite=' + status + '&ipv4=' + ipv4 + '&id_suite=' + id
             })
-            
+
                 .done(function (data) {
-                console.log(data)
+                    console.log(data)
                     try {
                         var obj_json = JSON.parse(data);
-            
+
                         if (obj_json['mensagem'] === "sucesso") {
                             var classe_nova = get_background_suite(obj_json['status']);
-                            document.getElementById('bg_' + id).className = 'card bg-'+classe_nova+' text-white';
+                            document.getElementById('bg_' + id).className = 'card bg-' + classe_nova + ' text-white';
                             mensagem_sucesso("Status alterado com sucesso");
 
-                        } else if(obj_json['mensagem'] === "pdv"){
+                        } else if (obj_json['mensagem'] === "pdv") {
                             mensagem_danger("PDV Está online");
-                        }else if(obj_json['mensagem'] === "nivel"){
+                        } else if (obj_json['mensagem'] === "nivel") {
                             mensagem_danger("Você não tem permissão!");
-                        }else {
+                        } else {
                             mensagem_warning("Houve um erro");
                         }
-            
+
                     } catch (e) {
                         mensagem_danger("Houve um erro inesperado");
-            
+
                     }
-            
+
                 }).fail(function (data) {
                     mensagem_danger("Houve um erro inesperado");
-            
+
                 });
-            
+
         }
-      })
+    })
 
 
 }
@@ -449,9 +432,9 @@ function get_background_suite(status) {
     } else if (status == "3") {
         status_suite = "primary";
     } else if (status == "4") {
-        status_suite = "redBlink";
-    } else if (status == "5") {
         status_suite = "blueBlink";
+    } else if (status == "5") {
+        status_suite = "redBlink";
     }
 
     return status_suite
@@ -477,145 +460,144 @@ function suite_online(dataHora) {
         status = true;
     }
 
-    return status;
+    //return status;
+    return true;
 }
 
 //ABRE SUITE DETALHES
-function suite_load(id){
-    var url = "../suite/?id="+id;
+function suite_load(id) {
+    var url = "../suite/?id=" + id;
     location.replace(url);
 }
 
 //ALTERA OPACIDADE
-function altera_icon_suite(suite,icon,opacidade){
+function altera_icon_suite(suite, icon, opacidade) {
 
     var element;
     var index;
-  
+
     //PORTA
-    if(icon == 1){
-        index = "icon_porta_"+suite
+    if (icon == 1) {
+        index = "icon_porta_" + suite
         element = document.getElementById(index);
     }
     //LAMPADA
-    else  if(icon == 2){
-        index = "icon_iluminacao_"+suite
+    else if (icon == 2) {
+        index = "icon_iluminacao_" + suite
         element = document.getElementById(index);
-       
+
     }
     //AR
-    else  if(icon == 3){
-        index = "icon_ar_"+suite
+    else if (icon == 3) {
+        index = "icon_ar_" + suite
         element = document.getElementById(index);
     }
     //CHAPINHA
-    else  if(icon == 4){
-        index = "icon_tomada_"+suite
+    else if (icon == 4) {
+        index = "icon_tomada_" + suite
         element = document.getElementById(index);
     }
     //TV
-    else  if(icon == 5){
-        index = "icon_tv_"+suite
+    else if (icon == 5) {
+        index = "icon_tv_" + suite
         element = document.getElementById(index);
     }
     //AUDIO
-    else  if(icon == 6){
-        index = "icon_audio_"+suite
+    else if (icon == 6) {
+        index = "icon_audio_" + suite
         element = document.getElementById(index);
     }
 
     element.style.opacity = opacidade;
-    
+
 }
 
 //EXISTE LAMPADA LIGADA
-function existe_lampada_ligada(json){
- 
-var existe = false;
+function existe_lampada_ligada(json) {
 
-if(suite_online(json['visto'])){
- if(json['l1'] == "1"){
-    existe = true;
- }else if(json['l2'] == "1"){
-    existe = true;
- }else if(json['l3'] == "1"){
-    existe = true;
- }else if(json['l4'] == "1"){
-    existe = true;
- }else if(json['l5'] == "1"){
-    existe = true;
- }else if(json['l6'] == "1"){
-    existe = true;
- }
-}
+    var existe = false;
 
- if(existe){
-    altera_icon_suite(json['id'],2,"1")
- }else{
-    altera_icon_suite(json['id'],2,"0.1")
- }
+    if (suite_online(json['visto'])) {
+        if (json['l1'] == "1") {
+            existe = true;
+        } else if (json['l2'] == "1") {
+            existe = true;
+        } else if (json['l3'] == "1") {
+            existe = true;
+        } else if (json['l4'] == "1") {
+            existe = true;
+        } else if (json['l5'] == "1") {
+            existe = true;
+        } else if (json['l6'] == "1") {
+            existe = true;
+        }
+    }
 
-
+    if (existe) {
+        altera_icon_suite(json['id'], 2, "1")
+    } else {
+        altera_icon_suite(json['id'], 2, "0.1")
+    }
 }
 
 //EXISTE PORTA ABERTA
-function existe_porta_aberta(json){
- 
+function existe_porta_aberta(json) {
+
     var existe = false;
-    
-    if(suite_online(json['visto'])){
-     if(json['porta_cliente'] == "0"){
-        existe = true;
-     }else if(json['porta_servico'] == "0"){
-        existe = true;
-     }
+
+    if (suite_online(json['visto'])) {
+        if (json['porta_cliente'] == "0") {
+            existe = true;
+        } else if (json['porta_servico'] == "0") {
+            existe = true;
+        }
     }
-    
-     if(existe){
-        altera_icon_suite(json['id'],1,"1")
-     }else{
-        altera_icon_suite(json['id'],1,"0.1")
-     }
-    
-    
+
+    if (existe) {
+        altera_icon_suite(json['id'], 1, "1")
+    } else {
+        altera_icon_suite(json['id'], 1, "0.1")
+    }
+
+
 }
 
 //EXISTE CHAPINHA
-function existe_chapinha_ligada(json){
- 
+function existe_chapinha_ligada(json) {
+
     var existe = false;
-    
-    if(suite_online(json['visto'])){
-     if(json['chapinha'] == "1"){
-        existe = true;
-     }
+
+    if (suite_online(json['visto'])) {
+        if (json['chapinha'] == "1") {
+            existe = true;
+        }
     }
-    
-     if(existe){
-        altera_icon_suite(json['id'],4,"1")
-     }else{
-        altera_icon_suite(json['id'],4,"0.1")
-     }
-    
-    
+
+    if (existe) {
+        altera_icon_suite(json['id'], 4, "1")
+    } else {
+        altera_icon_suite(json['id'], 4, "0.1")
+    }
+
+
 }
 
 //EXISTE TV
-function existe_tv_ligada(json){
- 
+function existe_tv_ligada(json) {
+
     var existe = false;
-    
-    if(suite_online(json['visto'])){
-     if(json['tv'] == "1"){
-        existe = true;
-     }
+
+    if (suite_online(json['visto'])) {
+        if (json['tv'] == "1") {
+            existe = true;
+        }
     }
-    
-     if(existe){
-        altera_icon_suite(json['id'],5,"1")
-     }else{
-        altera_icon_suite(json['id'],5,"0.1")
-     }
-    
-    
+
+    if (existe) {
+        altera_icon_suite(json['id'], 5, "1")
+    } else {
+        altera_icon_suite(json['id'], 5, "0.1")
+    }
+
+
 }

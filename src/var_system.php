@@ -11,10 +11,10 @@ $desenvolvido_por = " GÓES CONNECT";
 $desenvolvido_por_url = "http://goesconnect.com.br";
 
 $url_node_red = "http://192.168.0.11:1880";
+$token_node_red = "goes";
 
 
-$token_sistema = "cassa"; //TOKEN VALIDACAO
-
+$token_sistema = ""; //TOKEN VALIDACAO
 
 $data_sistema =  date("Y-m-d"); // DATA
 $hora_sistema =  date("H:i:s"); // HORA
@@ -33,8 +33,6 @@ if ($servidor_web) {
     $host_user_db = "root";
     $host_pass_db = "";
 }
-
-
 
 
 if ($debugar) {

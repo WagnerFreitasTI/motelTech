@@ -1,26 +1,25 @@
-<?php 
+<?php
 session_start();
-require_once "../../../src/var_system.php";
+require_once "../../src/suite/function.php";
 require_once "../../../src/functions.php";
 require_once "../../src/usuario/function.php";
-require_once "../../src/suite/function.php";
 require_once "../../src/iluminacao/function.php";
 $pdo = require_once "../../../src/connection.php";
 
 
-protegePagina($pdo);//SOMENTE USUARIO LOGADO
+protegePagina($pdo); //SOMENTE USUARIO LOGADO
 //APOS VALIDAR
 
 //USUARIO LOGADO
 $usuario = getUsuario($pdo);
+$usuarioJson = json_encode($usuario);
 
 
-
-$suite = recebe_suite_view($pdo,"id");
-$hardware = recebe_suite_hw($pdo,$suite['id']);
-$iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
-
+$suite = recebe_suite_view($pdo, "id");
+$hardware = recebe_suite_hw($pdo, $suite['id']);
+$iluminacao_nome = get_iluminacao_nome($pdo, $suite['id']);
 ?>
+
 
 
 <!DOCTYPE html>
@@ -30,69 +29,69 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
-    <title>MotelTech - Suíte <?=$suite['numero']?> | <?=$suite['nome']?></title>
+    <title>MotelTech - Suíte <?= $suite['numero'] ?> | <?= $suite['nome'] ?></title>
 
     <!-- SCRIPTS -->
     <?php require_once("../layout/scripts_header.php"); ?>
 
     <style>
-    #luz_principal:checked {
-        background-color: #9700bd;
-    }
+        #luz_principal:checked {
+            background-color: #9700bd;
+        }
 
-    #luz_lustre:checked {
-        background-color: #9700bd;
-    }
+        #luz_lustre:checked {
+            background-color: #9700bd;
+        }
 
-    #luz_cortina:checked {
-        background-color: #9700bd;
-    }
+        #luz_cortina:checked {
+            background-color: #9700bd;
+        }
 
-    #luz_criado_mudo:checked {
-        background-color: #9700bd;
-    }
+        #luz_criado_mudo:checked {
+            background-color: #9700bd;
+        }
 
-    #luz_wc_pia:checked {
-        background-color: #9700bd;
-    }
+        #luz_wc_pia:checked {
+            background-color: #9700bd;
+        }
 
-    #luz_wc_box:checked {
-        background-color: #9700bd;
-    }
+        #luz_wc_box:checked {
+            background-color: #9700bd;
+        }
 
-    .square {
-        height: 40px;
-        width: 40px;
-    }
+        .square {
+            height: 40px;
+            width: 40px;
+        }
 
-    .square-vermelho {
-        background-color: red;
-    }
+        .square-vermelho {
+            background-color: red;
+        }
 
-    .square-verde {
-        background-color: green;
-    }
+        .square-verde {
+            background-color: green;
+        }
 
-    .square-azul {
-        background-color: blue;
-    }
+        .square-azul {
+            background-color: blue;
+        }
 
-    .square-laranja {
-        background-color: orange;
-    }
+        .square-laranja {
+            background-color: orange;
+        }
 
-    .square-roxa {
-        background-color: purple;
-    }
+        .square-roxa {
+            background-color: purple;
+        }
 
-    .square-branco {
-        background-color: white;
-        border: 1px solid black;
-    }
+        .square-branco {
+            background-color: white;
+            border: 1px solid black;
+        }
 
-    .square-preto {
-        background-color: black;
-    }
+        .square-preto {
+            background-color: black;
+        }
     </style>
 
     </style>
@@ -100,6 +99,11 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 </head>
 
 <body>
+    <script>
+        // Exibe as informações do usuário no console
+        var usuario = <?php echo $usuarioJson; ?>;
+        console.log("Usuário Logado:", usuario);
+    </script>
 
     <!-- Main navbar -->
     <div class="navbar navbar-dark navbar-expand-lg navbar-static border-bottom
@@ -134,7 +138,7 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                             rounded-pill" alt="">
                             <span class="status-indicator bg-success"></span>
                         </div>
-                        <span class="d-none d-lg-inline-block mx-lg-2"><?=$usuario['nome']?></span>
+                        <span class="d-none d-lg-inline-block mx-lg-2"><?= $usuario['nome'] ?></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a href="#" class="dropdown-item" onClick="alterar_senha()">
@@ -248,11 +252,9 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                 <li class="nav-item">
                                     <a href="../suite/?id=19" class="nav-link">29 - Safira</a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a href="../suite/?id=20" class="nav-link">30 - Prime</a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a href="../suite/?id=21" class="nav-link">31 - Diamond</a>
                                 </li>
@@ -270,24 +272,24 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                 </li>
                             </ul>
                         </li>
-                        <?php if(!($usuario['nivel'] === "1")) {?>
+                        <?php if (!($usuario['nivel'] === "1")) { ?>
 
-                        
+
                             <li class="nav-item nav-item-submenu">
-                            <a class="nav-link ">
-                                <i class="ph-bed"></i>
-                                <span>Usuário</span>
-                            </a>
-                            <ul class="nav-group-sub collapse">
-                                <li class="nav-item">
-                                    <a href="../usuario" class="nav-link">Usuários</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../usuario/log" class="nav-link">Logs </a>
-                                </li>
-  
-                            </ul>
-                        </li>
+                                <a class="nav-link ">
+                                    <i class="ph-bed"></i>
+                                    <span>Usuário</span>
+                                </a>
+                                <ul class="nav-group-sub collapse">
+                                    <li class="nav-item">
+                                        <a href="../usuario" class="nav-link">Usuários</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../usuario/log" class="nav-link">Logs </a>
+                                    </li>
+
+                                </ul>
+                            </li>
                         <?php } ?>
                     </ul>
                 </div>
@@ -308,8 +310,8 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                         <!-- Content area -->
                         <div class="content" style="margin-top:-15px" id="row_contente">
 
-                            <input type="hidden" id="id_suite" name="id_suite" value="<?=$suite['id']?>">
-                            <input type="hidden" id="ip_suite" name="ip_suite" value="<?=$hardware['ipv4']?>">
+                            <input type="hidden" id="id_suite" name="id_suite" value="<?= $suite['id'] ?>">
+                            <input type="hidden" id="ip_suite" name="ip_suite" value="<?= $hardware['ipv4'] ?>">
 
                             <!-- ERRO COMUNICACAO -->
                             <div class="container " id="erro_conn" id="erro_conn" style="display:none">
@@ -328,15 +330,13 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                 <!-- STATUS SUITE |  ENVIAR MENSAGEM DE VOZ | EFETUAR LIGACAO PARA A SUITE -->
                                 <div class="col-lg-6 col-xl-3">
                                     <!-- STATUS SUITE -->
-                                    <div id="bg_<?=$suite['id']?>" class="card card-body bg-danger text-white"
-                                        style="height:90px;background-image: url(assets/images/backgrounds/panel_bg.png);">
+                                    <div id="bg_<?= $suite['id'] ?>" class="card card-body bg-danger text-white" style="height:90px;background-image: url(assets/images/backgrounds/panel_bg.png);">
                                         <div class="d-flex">
                                             <div class="flex-fill text-center" style="margin-top:-10px">
-                                                <span onClick="suite_load_qrcode('<?=$suite['qrcode']?>')"> <i class="ph-qr-code ph-2x"></i></span>
+                                                <span onClick="suite_load_qrcode('<?= $suite['qrcode'] ?>')"> <i class="ph-qr-code ph-2x"></i></span>
                                                 <h1 style="margin-top:-10px">
-                                                    <?=$suite['numero']?>
-                                                    <span class="d-none d-lg-inline-block mx-lg-1 "
-                                                        style="font-size:18px"><?=$suite['nome']?>
+                                                    <?= $suite['numero'] ?>
+                                                    <span class="d-none d-lg-inline-block mx-lg-1 " style="font-size:18px"><?= $suite['nome'] ?>
                                                     </span>
                                                 </h1>
                                             </div>
@@ -349,9 +349,7 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                         </div>
                                         <div class="card-body">
 
-                                            <textarea id="mensagem_alexa" name="mensagem_alexa"
-                                                class="form-control mb-3" rows="5" cols="1"
-                                                placeholder="Escreva a mensagem para o cliente ouvir..."></textarea>
+                                            <textarea id="mensagem_alexa" name="mensagem_alexa" class="form-control mb-3" rows="5" cols="1" placeholder="Escreva a mensagem para o cliente ouvir..."></textarea>
                                             <div class="d-flex align-items-center">
                                                 <button onClick="texto_to_audio()" class="btn  ms-auto bg-moteltech ">
                                                     Enviar
@@ -369,8 +367,7 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                         <div class="card-body">
 
                                             <div class="d-flex ms-3">
-                                                <p onClick="suite_call()" class="btn  bg-moteltech "
-                                                    style="margin-top: 20px;height:50px">
+                                                <p onClick="suite_call()" class="btn  bg-moteltech " style="margin-top: 20px;height:50px">
                                                     Ligar para a suíte
                                                     <i class="ph-phone ms-2"></i>
                                                 </p>
@@ -389,77 +386,58 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
 
                                             <a class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l1'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l1'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_principal" name="luz_principal"
-                                                        onClick="toogle_lampada_suite(1)" type="checkbox"
-                                                        class="form-check-input form-check-input-dark">
-                                                    <label class="form-check-label opacity-100"
-                                                        for="sc_r_dark"><?=$iluminacao_nome['l1']?></label>
+                                                    <input id="luz_principal" name="luz_principal" onClick="toogle_lampada_suite(1)" type="checkbox" class="form-check-input form-check-input-dark">
+                                                    <label class="form-check-label opacity-100" for="sc_r_dark"><?= $iluminacao_nome['l1'] ?></label>
                                                 </div>
                                             </a>
 
                                             <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l2'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l2'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_lustre" name="luz_lustre"
-                                                        onClick="toogle_lampada_suite(2)" type="checkbox"
-                                                        class="form-check-input form-check-input-dark" id="sc_r_dark">
-                                                    <label class="form-check-label opacity-100"
-                                                        for="sc_r_dark"><?=$iluminacao_nome['l2']?></label>
+                                                    <input id="luz_lustre" name="luz_lustre" onClick="toogle_lampada_suite(2)" type="checkbox" class="form-check-input form-check-input-dark" id="sc_r_dark">
+                                                    <label class="form-check-label opacity-100" for="sc_r_dark"><?= $iluminacao_nome['l2'] ?></label>
                                                 </div>
                                             </a>
                                             <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l3'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l3'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_cortina" name="luz_cortina"
-                                                        onClick="toogle_lampada_suite(3)" type="checkbox"
-                                                        class="form-check-input form-check-input-dark" id="sc_r_dark">
-                                                    <label class="form-check-label opacity-100"
-                                                        for="sc_r_dark"><?=$iluminacao_nome['l3']?></label>
+                                                    <input id="luz_cortina" name="luz_cortina" onClick="toogle_lampada_suite(3)" type="checkbox" class="form-check-input form-check-input-dark" id="sc_r_dark">
+                                                    <label class="form-check-label opacity-100" for="sc_r_dark"><?= $iluminacao_nome['l3'] ?></label>
                                                 </div>
                                             </a>
                                             <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l4'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l4'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_criado_mudo" name="luz_criado_mudo"
-                                                        onClick="toogle_lampada_suite(4)" type="checkbox"
-                                                        class="form-check-input form-check-input-dark" id="sc_r_dark">
+                                                    <input id="luz_criado_mudo" name="luz_criado_mudo" onClick="toogle_lampada_suite(4)" type="checkbox" class="form-check-input form-check-input-dark" id="sc_r_dark">
                                                     <label class="form-check-label opacity-100" for="sc_r_dark">
-                                                    <?=$iluminacao_nome['l4']?></label>
+                                                        <?= $iluminacao_nome['l4'] ?></label>
                                                 </div>
                                             </a>
                                             <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l5'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l5'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_wc_pia" name="luz_wc_pia"
-                                                        onClick="toogle_lampada_suite(5)" type="checkbox"
-                                                        class="form-check-input form-check-input-dark" id="sc_r_dark">
+                                                    <input id="luz_wc_pia" name="luz_wc_pia" onClick="toogle_lampada_suite(5)" type="checkbox" class="form-check-input form-check-input-dark" id="sc_r_dark">
                                                     <label class="form-check-label opacity-100" for="sc_r_dark">
-                                                    <?=$iluminacao_nome['l5']?></label>
+                                                        <?= $iluminacao_nome['l5'] ?></label>
                                                 </div>
                                             </a>
 
                                             <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l6'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l6'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_wc_box" name="luz_wc_box"
-                                                        onClick="toogle_lampada_suite(6)" type="checkbox"
-                                                        class="form-check-input form-check-input-purple "
-                                                        id="sc_r_dark">
+                                                    <input id="luz_wc_box" name="luz_wc_box" onClick="toogle_lampada_suite(6)" type="checkbox" class="form-check-input form-check-input-purple " id="sc_r_dark">
                                                     <label class="form-check-label opacity-100" for="sc_r_dark">
-                                                    <?=$iluminacao_nome['l6']?></label>
+                                                        <?= $iluminacao_nome['l6'] ?></label>
                                                 </div>
                                             </a>
 
                                             <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="form-check form-switch mb-0 opacity-<?=$iluminacao_nome['l7'] == "null" ? 0:100 ?>">
+                                                <div class="form-check form-switch mb-0 opacity-<?= $iluminacao_nome['l7'] == "null" ? 0 : 100 ?>">
                                                     <div class="font-size: 15px opacity-100 ph-lightbulb"></div>
-                                                    <input id="luz_wc_box" name="luz_wc_box" 
-                                                        onClick="toogle_lampada_suite(7)" type="checkbox"
-                                                        class="form-check-input form-check-input-purple "
-                                                        id="sc_r_dark">
-                                                    <label class="form-check-label opacity-100" for="sc_r_dark"><?=$iluminacao_nome['l7']?></label>
+                                                    <input id="luz_wc_box" name="luz_wc_box" onClick="toogle_lampada_suite(7)" type="checkbox" class="form-check-input form-check-input-purple " id="sc_r_dark">
+                                                    <label class="form-check-label opacity-100" for="sc_r_dark"><?= $iluminacao_nome['l7'] ?></label>
                                                 </div>
                                             </a>
 
@@ -467,13 +445,11 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                             <span class="ms-2 mt-4">
 
-                                                <button class="btn text-white bg-moteltech "
-                                                    onClick="toogle_all_lampada_suite(1)">
+                                                <button class="btn text-white bg-moteltech " onClick="toogle_all_lampada_suite(1)">
                                                     Ligar tudo
                                                 </button>
 
-                                                <button class="btn  text-white bg-moteltech "
-                                                    onClick="toogle_all_lampada_suite(0)">
+                                                <button class="btn  text-white bg-moteltech " onClick="toogle_all_lampada_suite(0)">
                                                     Desligar tudo
                                                 </button>
 
@@ -495,31 +471,19 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="square square-vermelho"
-                                                            style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(1)"></div>
-                                                        <div class="square square-verde"
-                                                            style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(2)"></div>
-                                                        <div class="square square-azul" style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(3)"></div>
-                                                        <div class="square square-laranja"
-                                                            style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(4)"></div>
+                                                        <div class="square square-vermelho" style=" display: inline-block; " onClick="suite_rgb_change(1)"></div>
+                                                        <div class="square square-verde" style=" display: inline-block; " onClick="suite_rgb_change(2)"></div>
+                                                        <div class="square square-azul" style=" display: inline-block; " onClick="suite_rgb_change(3)"></div>
+                                                        <div class="square square-laranja" style=" display: inline-block; " onClick="suite_rgb_change(4)"></div>
 
                                                     </div>
                                                 </div>
 
                                                 <div class="row" style="margin-left:10px">
                                                     <div class="col">
-                                                        <div class="square square-roxa" style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(5)"></div>
-                                                        <div class="square square-branco"
-                                                            style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(6)"></div>
-                                                        <div class="square square-preto"
-                                                            style=" display: inline-block; "
-                                                            onClick="suite_rgb_change(7)"></div>
+                                                        <div class="square square-roxa" style=" display: inline-block; " onClick="suite_rgb_change(5)"></div>
+                                                        <div class="square square-branco" style=" display: inline-block; " onClick="suite_rgb_change(6)"></div>
+                                                        <div class="square square-preto" style=" display: inline-block; " onClick="suite_rgb_change(7)"></div>
 
 
                                                     </div>
@@ -542,16 +506,14 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                             <div class="row" style="margin-bottom: -30px">
                                                 <h5> Portas </h5>
                                                 <div class="col">
-                                                    <div id="porta_cliente" name="porta_cliente"
-                                                        class="d-inline-flex bg-secondary bg-opacity-50 text-light rounded-pill p-2 mb-2 mt-1">
+                                                    <div id="porta_cliente" name="porta_cliente" class="d-inline-flex bg-secondary bg-opacity-50 text-light rounded-pill p-2 mb-2 mt-1">
                                                         <i class="ph-door ph-2x m-1" style=" color: white;"></i>
                                                     </div>
                                                     <h5 class="card-title">Cliente</h5>
                                                 </div>
 
                                                 <div class="col">
-                                                    <div id="porta_servico" name="porta_servico"
-                                                        class="d-inline-flex bg-secondary bg-opacity-50 text-light rounded-pill p-2 mb-2 mt-1">
+                                                    <div id="porta_servico" name="porta_servico" class="d-inline-flex bg-secondary bg-opacity-50 text-light rounded-pill p-2 mb-2 mt-1">
                                                         <i class="ph-door ph-2x m-1" style=" color: white;"></i>
                                                     </div>
                                                     <h5 class="bg-opacity-70 text-dark card-title">Serviço</h5>
@@ -566,8 +528,7 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                     <div class="card" style="margin-top: -10px;">
                                         <div class="card-body text-center " style="margin-bottom: -30px;">
                                             <h5> Chapinha </h5>
-                                            <div id="chapinha" name="chapinha"
-                                                class="d-inline-flex bg-grey bg-opacity-50 text-light rounded-pill p-2 mb-3 mt-1">
+                                            <div id="chapinha" name="chapinha" class="d-inline-flex bg-grey bg-opacity-50 text-light rounded-pill p-2 mb-3 mt-1">
                                                 <i class="ph-plug ph-2x m-1" style=" color: white;"></i>
                                             </div>
 
@@ -599,12 +560,10 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12" style="margin-top:-10px">
-                                                    <button class="btn text-white bg-moteltech "
-                                                        onClick="liga_arcondicionado()">
+                                                    <button class="btn text-white bg-moteltech " onClick="liga_arcondicionado()">
                                                         LIGAR
                                                     </button>
-                                                    <button class="btn text-white bg-moteltech "
-                                                        onClick="desliga_arcondicionado()">
+                                                    <button class="btn text-white bg-moteltech " onClick="desliga_arcondicionado()">
                                                         DESLIGAR
                                                     </button>
                                                 </div>
@@ -613,8 +572,8 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
 
                                         </div>
-                                    
-                                   
+
+
                                     </div>
                                 </div>
 
@@ -632,20 +591,17 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                                 <div class=" btn-group">
 
-                                                    <button onClick="suite_audio_video(1)" style="width:80px"
-                                                        class="btn btn-light flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(1)" style="width:80px" class="btn btn-light flex-column rounded-0 rounded-start ">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Spotify
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(2)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(2)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Youtube
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(3)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
+                                                    <button onClick="suite_audio_video(3)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Netflix
                                                     </button>
@@ -660,20 +616,17 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                                 <div class=" btn-group">
 
-                                                    <button onClick="suite_audio_video(4)" style="width:80px"
-                                                        class="btn btn-light flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(4)" style="width:80px" class="btn btn-light flex-column rounded-0 rounded-start ">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         IPTV
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(5)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(5)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Românticas
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(6)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
+                                                    <button onClick="suite_audio_video(6)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Rock
                                                     </button>
@@ -687,20 +640,17 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                                 <div class=" btn-group">
 
-                                                    <button onClick="suite_audio_video(7)" style="width:80px"
-                                                        class="btn btn-light flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(7)" style="width:80px" class="btn btn-light flex-column rounded-0 rounded-start ">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Samba
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(8)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(8)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         Sertanejo
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(9)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
+                                                    <button onClick="suite_audio_video(9)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
                                                         <i class="ph-youtube-logo text-danger ph-1x mb-1"></i>
                                                         MPB
                                                     </button>
@@ -714,20 +664,17 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                                 <div class=" btn-group">
 
-                                                    <button onClick="suite_audio_video(10)" style="width:80px"
-                                                        class="btn btn-light flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(10)" style="width:80px" class="btn btn-light flex-column rounded-0 rounded-start ">
                                                         <i class="ph-spotify-logo text-success ph-1x mb-1"></i>
                                                         Spotify
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(11)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(11)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
                                                         <i class="ph-spotify-logo text-success ph-1x mb-1"></i>
                                                         Românticas
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(12)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
+                                                    <button onClick="suite_audio_video(12)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
                                                         <i class="ph-spotify-logo text-success ph-1x mb-1"></i>
                                                         Rock
                                                     </button>
@@ -741,20 +688,17 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
                                                 <div class=" btn-group">
 
-                                                    <button onClick="suite_audio_video(13)" style="width:80px"
-                                                        class="btn btn-light flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(13)" style="width:80px" class="btn btn-light flex-column rounded-0 rounded-start ">
                                                         <i class="ph-spotify-logo text-success ph-1x mb-1"></i>
                                                         Samba
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(14)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
+                                                    <button onClick="suite_audio_video(14)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start ">
                                                         <i class="ph-spotify-logo text-success ph-1x mb-1"></i>
                                                         Sertanejo
                                                     </button>
 
-                                                    <button onClick="suite_audio_video(15)"
-                                                        class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
+                                                    <button onClick="suite_audio_video(15)" class="ms-1 btn btn-light w-10 flex-column rounded-0 rounded-start">
                                                         <i class="ph-spotify-logo text-success ph-1x mb-1"></i>
                                                         MPB
                                                     </button>
@@ -781,16 +725,14 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
 
                                                 <div class="col-lg-6" style="margin-top:-10px">
-                                                    <button style="width:100px" class="btn text-white bg-moteltech "
-                                                        onClick="suite_cenario(5)">
+                                                    <button style="width:100px" class="btn text-white bg-moteltech " onClick="suite_cenario(5)">
                                                         Jantar
                                                     </button>
 
                                                 </div>
 
                                                 <div class="col-lg-6 " style="margin-top:-10px">
-                                                    <button style="width:100px" class="btn text-white bg-moteltech "
-                                                        onClick="suite_cenario(6)">
+                                                    <button style="width:100px" class="btn text-white bg-moteltech " onClick="suite_cenario(6)">
                                                         Romântico
                                                     </button>
                                                 </div>
@@ -801,16 +743,14 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
 
 
                                                 <div class="col-lg-6" style="margin-top:-10px">
-                                                    <button style="width:100px" class="btn text-white bg-moteltech "
-                                                        onClick="suite_cenario(7)">
+                                                    <button style="width:100px" class="btn text-white bg-moteltech " onClick="suite_cenario(7)">
                                                         SPA
                                                     </button>
 
                                                 </div>
 
                                                 <div class="col-lg-6 " style="margin-top:-10px">
-                                                    <button style="width:100px" class="btn text-white bg-moteltech "
-                                                        onClick="suite_cenario(8)">
+                                                    <button style="width:100px" class="btn text-white bg-moteltech " onClick="suite_cenario(8)">
                                                         Dormir
                                                     </button>
                                                 </div>
@@ -871,8 +811,7 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                 <div class="fs-sm text-muted">SAlternar para o tema claro</div>
                             </div>
                         </div>
-                        <input type="radio" class="form-check-input cursor-pointer ms-auto" name="main-theme"
-                            value="light" checked>
+                        <input type="radio" class="form-check-input cursor-pointer ms-auto" name="main-theme" value="light" checked>
                     </div>
                 </label>
 
@@ -886,8 +825,7 @@ $iluminacao_nome = get_iluminacao_nome($pdo,$suite['id']);
                                 <div class="fs-sm text-muted">Alternar para o tema escuro</div>
                             </div>
                         </div>
-                        <input type="radio" class="form-check-input cursor-pointer ms-auto" name="main-theme"
-                            value="dark">
+                        <input type="radio" class="form-check-input cursor-pointer ms-auto" name="main-theme" value="dark">
                     </div>
                 </label>
 

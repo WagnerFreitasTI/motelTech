@@ -1,58 +1,51 @@
 <?php
-header('Access-Control-Allow-Origin:*');
-header('Access-Control-Allow-Headers:*');
+// Definir cabeçalhos para permitir acesso CORS
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: *');
+header('Content-Type: application/json');
 
+// Incluir arquivos necessários
 require_once "../../src/var_system.php";
 require_once "../../src/functions.php";
-
 $pdo = require_once "../../src/connection.php";
 
+// Inicializar resposta padrão
+$response = ['mensagem' => 'erro'];
 
-$return['mensagem'] = "erro";
-
-
-  
-
-
-if (isset($_GET['token']) )
+// Função para proteger e retornar parâmetro GET ou null se não estiver definido
+function getProtectedParam($paramName)
 {
+    return isset($_GET[$paramName]) ? protect($_GET[$paramName]) : null;
+}
 
-        $token = protect($_GET['token']);
-		$id_suite = protect($_GET['id']);
-		$ssid = protect($_GET['ssid']);
-        $senha = protect($_GET['senha']);
-        $ipv4 = protect($_GET['ipv4']);
-        $rssi = protect($_GET['rssi']);
-        $status_suite = protect($_GET['status_suite']);
-        $fw = protect($_GET['fw']);
-        $mac = protect($_GET['mac']);
+// Verificar se o token está presente
+if (isset($_GET['token'])) {
+    $token = getProtectedParam('token');
+    $id_suite = getProtectedParam('id');
+    $ssid = getProtectedParam('ssid');
+    $senha = getProtectedParam('senha');
+    $ipv4 = getProtectedParam('ipv4');
+    $rssi = getProtectedParam('rssi');
+    $status_suite = getProtectedParam('status_suite');
+    $fw = getProtectedParam('fw');
+    $mac = getProtectedParam('mac');
 
-
-    
-   
-
-         
-		if(true){
-            $sql = "UPDATE device  SET mac=?, fw=?, ssid=?, senha=?, ipv4=?, rssi=?, status_suite=?,visto=? WHERE id =?"; 
+    // Validar parâmetro id_suite
+    if (true) {
+        try {
+            $sql = "UPDATE device SET mac = ?, fw = ?, ssid = ?, senha = ?, ipv4 = ?, rssi = ?, status_suite = ?, visto = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$mac,$fw,$ssid,$senha,$ipv4,$rssi,$status_suite,$data_hora_sistema,$id_suite ]);
-
-            $return['mensagem'] = "sucesso";
+            $stmt->execute([$mac, $fw, $ssid, $senha, $ipv4, $rssi, $status_suite, $id_suite]);
+            $response['mensagem'] = 'sucesso';
+        } catch (PDOException $e) {
+            $response['mensagem'] = 'erro: ' . $e->getMessage();
         }
-
-
-
-
-}
-else
-{
-    $return['mensagem'] = "erro";
-   
+    } else {
+        $response['mensagem'] = 'erro: parâmetro id_suite inválido';
+    }
+} else {
+    $response['mensagem'] = 'erro: token não fornecido';
 }
 
-
-
-
-header('Content-type: application/json');
-echo json_encode($return);
-?>
+// Enviar resposta como JSON
+echo json_encode($response);

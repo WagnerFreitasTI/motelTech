@@ -271,37 +271,24 @@ $usuario = getUsuario($pdo);
                             </li>
                             <li class="nav-item nav-item-submenu">
                                 <a class="nav-link ">
-                                    <i class="ph-notepad"></i>
-                                    <span>Configuração</span>
+                                    <i class="ph-bed"></i>
+                                    <span>Configurações</span>
                                 </a>
                                 <ul class="nav-group-sub collapse">
                                     <li class="nav-item">
-                                        <a class="nav-link nav-group-sub ">
-                                            <span>Parametros do Sistema</span>
-
-                                            <ul class="nav-group-sub collapse">
-                                                <li class="nav-item">Item 1</li>
-                                                <li class="nav-item">>Item 2
-                                                    <ul>
-                                                        <li>Subitem 2.1</li>
-                                                        <li>Subitem 2.2</li>
-                                                    </ul>
-                                                </li>
-                                                <li>Item 3</li>
-                                            </ul>
-
-                                        </a>
-
-
-
-
-
+                                        <a href="" class="nav-link">Parametros do Sistemas</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="../usuario" class="nav-link">Alterar Usuário </a>
+                                        <a href="" class="nav-link">Suites </a>
                                     </li>
+
                                 </ul>
-                            <?php } ?>
+                            </li>
+
+
+                        <?php } ?>
+
+
                     </ul>
                 </div>
             </div>
@@ -317,11 +304,6 @@ $usuario = getUsuario($pdo);
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="row" id="suites">
-
-
-
-
-
                             </div>
                         </div>
                     </div>
@@ -355,7 +337,7 @@ $usuario = getUsuario($pdo);
                             <i class="ph-sun ph-lg me-3"></i>
                             <div>
                                 <span class="fw-bold">Tema claro</span>
-                                <div class="fs-sm text-muted">SAlternar para o tema claro</div>
+                                <div class="fs-sm text-muted">Alternar para o tema claro</div>
                             </div>
                         </div>
                         <input type="radio" class="form-check-input cursor-pointer ms-auto" name="main-theme" value="light" checked>
